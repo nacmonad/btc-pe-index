@@ -12,6 +12,7 @@ import Table, {
   TableRow,
   TableSortLabel,
 } from 'material-ui/Table';
+import NumberFormat from 'react-number-format';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
@@ -22,10 +23,10 @@ import FilterListIcon from 'material-ui-icons/Cached';
 
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-  { id: 'price', numeric: true, disablePadding: false, label: 'Price' },
+  { id: 'price_usd', numeric: true, disablePadding: false, label: 'Price' },
+  { id: 'btcpe', numeric: true, disablePadding: false, label: 'BTCPE' },
   { id: 'supply', numeric: true, disablePadding: false, label: 'Supply' },
-  { id: 'market_cap', numeric: true, disablePadding: false, label: 'MarketCap' },
-  { id: 'btcpe', numeric: true, disablePadding: false, label: 'btcpe' },
+  { id: 'market_cap_usd', numeric: true, disablePadding: false, label: 'MarketCap' },
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -83,7 +84,7 @@ const toolbarStyles = theme => ({
     backgroundColor: theme.palette.primary.A100
   },
   highlight:
-    theme.palette.type === 'light'
+    theme.palette.type == 'light'
       ? {
           color: theme.palette.primary.A700,
           backgroundColor: theme.palette.primary.A100,
@@ -164,7 +165,7 @@ class EnhancedTable extends React.Component {
     super(props, context);
     this.state = {
       order: 'desc',
-      orderBy: 'market_cap',
+      orderBy: 'market_cap_usd',
       selected: [],
       data: [],
       page: 0,
@@ -240,13 +241,34 @@ class EnhancedTable extends React.Component {
     this.setState({data:newProps.data, params:newProps.params})
 
   }
+  determinePrefix = ()=>{
+    switch(this.props.params.currency){
+      case 'USD':
+        return '$'
+        break;
+      case 'CAD':
+        return '$'
+        break;
+      case 'EUR':
+        return '€'
+        break;
+      case 'GBP':
+        return '£'
+        break;
+      case 'JPY':
+        return '¥'
+        break;
+      default:
+        return '$'
+    }
+
+  }
   render() {
 
     const { classes, params } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
-    console.log(params.currency.toLowerCase())
     return (
       <Paper className={classes.root}>
         <EnhancedTableToolbar numSelected={selected.length} />
@@ -274,10 +296,12 @@ class EnhancedTable extends React.Component {
                     selected={isSelected}
                   >
                     <TableCell padding="none">{n.name}</TableCell>
-                    <TableCell numeric>{n[`price_${params.currency.toLowerCase()}`]}</TableCell>
-                    <TableCell numeric>{n.available_supply}</TableCell>
-                    <TableCell numeric>{n[`market_cap_${params.currency.toLowerCase()}`]}</TableCell>
-                    <TableCell numeric>{n.btcpe}</TableCell>
+                    <TableCell numeric><NumberFormat value={n[`price_${params.currency.toLowerCase()}`].toFixed(2)} displayType={'text'} thousandSeparator={true} prefix={this.determinePrefix()} /></TableCell>
+                    <TableCell numeric><NumberFormat value={n.btcpe} displayType={'text'} thousandSeparator={true} prefix={this.determinePrefix()} /></TableCell>
+                    <TableCell numeric><NumberFormat value={parseFloat(n.available_supply).toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={''} /></TableCell>
+                    <TableCell numeric><NumberFormat value={n[`market_cap_${params.currency.toLowerCase()}`].toFixed(0)} displayType={'text'} thousandSeparator={true} prefix={this.determinePrefix()} /></TableCell>
+
+
                   </TableRow>
                 );
               })}

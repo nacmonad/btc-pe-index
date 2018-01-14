@@ -3,18 +3,16 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import { history } from '../App';
 
-import { bang } from '../actions';
-
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
-import RestoreIcon from 'material-ui-icons/Restore';
+import HomeIcon from 'material-ui-icons/Home';
 import FavoriteIcon from 'material-ui-icons/Favorite';
-import LocationOnIcon from 'material-ui-icons/LocationOn';
+import InfoOutlineIcon from 'material-ui-icons/InfoOutline';
 
 const styles = {
   root: {
-    position:'absolute',
+    position:'fixed',
     width: '100%',
     bottom: 0
   },
@@ -38,6 +36,8 @@ class Footer extends React.Component {
       case 2:
         if (history.location.pathname !== '/donate') history.push('/donate');
         break;
+      default:
+        break;
     }
   };
 
@@ -52,9 +52,9 @@ class Footer extends React.Component {
         showLabels
         className={classes.root}
       >
-        <BottomNavigationAction label="Home" icon={<RestoreIcon />} />
-        <BottomNavigationAction label="About" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="Donate" icon={<LocationOnIcon />} />
+        <BottomNavigationAction label="Home" icon={<HomeIcon />} />
+        <BottomNavigationAction label="About" icon={<InfoOutlineIcon />} />
+        <BottomNavigationAction label="Donate" icon={<FavoriteIcon />} />
       </BottomNavigation>
     );
   }
@@ -72,7 +72,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(Object.assign({}, bang), dispatch)
+  return bindActionCreators({}, dispatch)
 }
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Footer));

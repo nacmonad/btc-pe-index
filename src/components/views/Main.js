@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {bang, updateData} from '../../actions';
+import { updateData } from '../../actions';
 
 import EnhancedTable from '../EnhancedTable';
 import Selects from '../Selects'
@@ -30,7 +30,9 @@ const inputB =
       items: [
         'USD',
         'EUR',
-        'CAD'
+        'CAD',
+        'GBP',
+        'JPY'
       ]
     }
 
@@ -51,10 +53,18 @@ class Main extends Component {
         return data.map((r)=>{
           return {
             ...r,
-            price:parseFloat(r.price_usd),
+            price_usd:parseFloat(r.price_usd),
+            price_eur:parseFloat(r.price_eur),
+            price_cad:parseFloat(r.price_cad),
+            price_gbp:parseFloat(r.price_gbp),
+            price_jpy:parseFloat(r.price_jpy),
             supply:parseFloat(r.available_supply),
             market_cap_usd:parseFloat(r.market_cap_usd),
-            btcpe: (parseFloat(r.price_usd)*parseFloat(r.total_supply)/parseFloat(data[0].total_supply)).toFixed(2).toString()
+            market_cap_eur:parseFloat(r.market_cap_eur),
+            market_cap_cad:parseFloat(r.market_cap_cad),
+            market_cap_gbp:parseFloat(r.market_cap_gbp),
+            market_cap_jpy:parseFloat(r.market_cap_jpy),
+            btcpe: (parseFloat(r[`price_${this.props.params.currency.toLowerCase()}`])*parseFloat(r.total_supply)/parseFloat(data[0].total_supply)).toFixed(2)
           }
         })
       })
@@ -90,7 +100,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ bang, updateData }, dispatch)
+  return bindActionCreators({ updateData }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);

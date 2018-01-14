@@ -40,7 +40,7 @@ class App extends Component {
       <Provider store={store}>
          { /* ConnectedRouter will use the store from Provider automatically */ }
          <ConnectedRouter history={history}>
-           <div>
+           <div style={{paddingBottom:'50px'}}>
                <Header/>
                <Route exact path="/" component={Main}/>
                <Route path="/about" component={About}/>

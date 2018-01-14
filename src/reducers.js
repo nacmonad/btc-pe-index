@@ -1,4 +1,4 @@
-import { BANG, UPDATE_DATA, UPDATE_PARAMS } from './actions'
+import { UPDATE_DATA, UPDATE_PARAMS } from './actions'
 
 const initialState = {
   bang:false,
@@ -16,11 +16,6 @@ export default function main(state, action) {
     return initialState
   }
   switch(action.type) {
-
-    case BANG:
-      console.log(action)
-      console.log(state)
-      return state
     case UPDATE_DATA:
       return {
         ...state,
